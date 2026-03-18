@@ -11,6 +11,12 @@ python -m uvicorn server.app:app --host 0.0.0.0 --port 8000
 
 Open inbound TCP **8000** on the VM firewall.
 
+Health check from another machine:
+
+```powershell
+curl http://<SERVER_IP>:8000/health
+```
+
 ## Client (Windows machine)
 
 From the repo root on the client:
@@ -21,15 +27,32 @@ From the repo root on the client:
 
 By default this registers a task that runs **at logon** using `pythonw.exe` (no console window).
 
+To see the task in Windows:
+
+- Task Scheduler → Task Scheduler Library → `EndpointAuditAgent`
+
 ### Run at startup (requires admin)
 
 ```powershell
 .\install\install-agent.ps1 -Trigger AtStartup -RunAsSystem -ServerUrl "http://<SERVER_IP>:8000" -ApiToken "change-me" -HostId "<CLIENT_NAME>"
 ```
 
+## Verify data arrived
+
+On the server machine:
+
+- `server_storage/<CLIENT_NAME>/events.jsonl`
+- `server_storage/<CLIENT_NAME>/latest.txt`
+
 ## Uninstall
 
 ```powershell
 .\install\uninstall-agent.ps1
 ```
+
+## Troubleshooting
+
+- **401 / 403 from server**: the server is enforcing `AUDIT_API_TOKEN` and the client token doesn't match.
+- **No data arriving**: check VM networking and firewall, and confirm `AUDIT_SERVER_URL` points to the VM IP (not `127.0.0.1`).
+- **Task runs but nothing happens**: ensure Python is installed and `pythonw.exe` exists next to `python.exe`.
 

@@ -23,6 +23,12 @@ python -m pip install -e ".[agent]"
 
 Why this works: `pythonw.exe` runs Python without creating a console window.
 
+## Option A2 (recommended): use the included installer script
+
+If you just want “one command” installation, use:
+
+- `docs/one-command-install.md`
+
 ## Option B (managed endpoints): run as a Windows Service
 
 If you need a real service (install/start/stop, recovery, centralized config), implement a service wrapper using:
