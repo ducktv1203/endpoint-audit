@@ -1,6 +1,6 @@
 # One-command install (Windows, authorized lab)
 
-This is a **legitimate homelab deployment** path for machines you own/administer.
+This is a **legitimate homelab deployment** path for machines you own/administer. It assumes you have administrative rights and appropriate authorization on the target endpoints.
 
 ## Server (VM)
 
@@ -55,4 +55,6 @@ On the server machine:
 - **401 / 403 from server**: the server is enforcing `AUDIT_API_TOKEN` and the client token doesn't match.
 - **No data arriving**: check VM networking and firewall, and confirm `AUDIT_SERVER_URL` points to the VM IP (not `127.0.0.1`).
 - **Task runs but nothing happens**: ensure Python is installed and `pythonw.exe` exists next to `python.exe`.
+
+> **Important**: This installer is designed for lab environments and managed endpoints where you are the legitimate administrator. Do not use it to deploy agents to machines without prior consent.
 

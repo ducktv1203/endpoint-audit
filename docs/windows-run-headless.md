@@ -37,3 +37,5 @@ If you need a real service (install/start/stop, recovery, centralized config), i
 
 This repo does not include a service wrapper by default to keep the educational scope small and cross-platform-friendly.
 
+> **Disclaimer**: All examples in this document are intended for environments where you have clear administrative authority (e.g., your own workstation, lab machines, or managed endpoints). They must not be used for covert monitoring or to circumvent local policies.
+

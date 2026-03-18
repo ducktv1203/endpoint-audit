@@ -47,14 +47,14 @@ Confirm data arrived on server:
 
 ## Local-only demo (no server required)
 
-This mode prints audit events in real time and writes a `.jsonl` file locally (default: your **Documents** folder).
+This mode prints audit events in real time and writes a `.jsonl` file locally into a dedicated folder (default: `~/Documents/endpoint-audit-demo/` or `~/Desktop/endpoint-audit-demo/`).
 
 ```bash
 python -m pip install -e ".[agent]"
 python -m agent.local_demo
 ```
 
-Choose an output folder:
+Choose a custom output folder:
 
 ```bash
 python -m agent.local_demo --out-dir "%USERPROFILE%\\Desktop" --host-id my-laptop
@@ -89,7 +89,7 @@ Server uses:
 
 ## Safety / Ethics
 
-This repo is intentionally scoped to **authorized endpoint auditing and in-app demos**.
+This project is intentionally scoped to **authorized endpoint auditing and in-app demos** for systems you own or are explicitly allowed to administer.
 
-If your goal is “run hidden on a target and exfiltrate data”, do not use this project.
+It must **not** be used for covert monitoring, non-consensual tracking, or any form of unauthorized access. If your goal is “run hidden on a target and exfiltrate data”, do not use this project.
 
