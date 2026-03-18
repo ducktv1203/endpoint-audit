@@ -6,9 +6,12 @@ __pycache__/
 storage/
 *.log
 log.txt
+.spool/
+server_storage/
 
 # Secrets / generated keys (should never be committed)
 *.key
+.env
 
 # OS/editor
 .vscode/

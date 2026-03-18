@@ -1,2 +1,6 @@
-# No external dependencies (uses Python stdlib: tkinter).
+# Prefer installing via `pyproject.toml`:
+# - Agent:  `python -m pip install -e ".[agent]"`
+# - Server: `python -m pip install -e ".[server]"`
+#
+# This file is kept only for minimal backwards compatibility.
 
