@@ -43,8 +43,13 @@ class InAppInputLogger(tk.Tk):
 
     def __init__(self) -> None:
         super().__init__()
-        self.title("In-app Input Logger (Demo)")
-        self.geometry("780x520")
+        self.title("In-app Input Logger · Demo")
+        self.geometry("860x560")
+        self.minsize(720, 480)
+
+        # Simple dark theme
+        self.configure(bg="#05060a")
+        self._apply_base_styles()
 
         self._recording = False
         self._start_time: datetime | None = None
@@ -54,35 +59,171 @@ class InAppInputLogger(tk.Tk):
         self._build_ui()
         self._bind_events()
 
+    def _apply_base_styles(self) -> None:
+        # Use Tk's default font to avoid platform-specific font issues
+        # and keep colors consistent across widgets.
+        self.option_add("*Label.foreground", "#E5E7EB")
+        self.option_add("*Label.background", "#05060a")
+        self.option_add("*Button.background", "#020617")
+        self.option_add("*Button.foreground", "#E5E7EB")
+
     def _build_ui(self) -> None:
-        header = tk.Frame(self)
-        header.pack(fill=tk.X, padx=10, pady=(10, 6))
+        root_frame = tk.Frame(self, bg="#05060a")
+        root_frame.pack(fill=tk.BOTH, expand=True, padx=16, pady=16)
 
-        self.status_var = tk.StringVar(value="Status: Idle (not recording)")
-        tk.Label(header, textvariable=self.status_var).pack(side=tk.LEFT)
+        # Header
+        header = tk.Frame(root_frame, bg="#05060a")
+        header.pack(fill=tk.X, pady=(0, 10))
 
-        btns = tk.Frame(header)
-        btns.pack(side=tk.RIGHT)
-        tk.Button(btns, text="Start", width=10, command=self.start_recording).pack(side=tk.LEFT, padx=(0, 6))
-        tk.Button(btns, text="Stop", width=10, command=self.stop_recording).pack(side=tk.LEFT, padx=(0, 6))
-        tk.Button(btns, text="Open storage folder", command=self.open_storage).pack(side=tk.LEFT)
-
-        notice = (
-            "This demo records only events that occur while this window is focused.\n"
-            "Click inside the window, then type/click/scroll to see events appear below."
+        title = tk.Label(
+            header,
+            text="In-app Input Logger",
+            fg="#F9FAFB",
+            bg="#05060a",
+            font=("TkDefaultFont", 16, "bold"),
         )
-        tk.Label(self, text=notice, justify=tk.LEFT).pack(anchor=tk.W, padx=10, pady=(0, 8))
+        title.pack(side=tk.LEFT)
 
-        self.log = scrolledtext.ScrolledText(self, wrap=tk.WORD, height=20)
-        self.log.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+        self.status_var = tk.StringVar(value="Idle · not recording")
+        status_label = tk.Label(
+            header,
+            textvariable=self.status_var,
+            fg="#9CA3AF",
+            bg="#05060a",
+            font=("TkDefaultFont", 9),
+        )
+        status_label.pack(side=tk.LEFT, padx=(10, 0))
+
+        # Controls
+        controls = tk.Frame(root_frame, bg="#05060a")
+        controls.pack(fill=tk.X, pady=(4, 10))
+
+        self.start_button = tk.Button(
+            controls,
+            text="● Start",
+            width=10,
+            command=self.start_recording,
+            bg="#10B981",
+            fg="#020617",
+            activebackground="#059669",
+            activeforeground="#020617",
+            bd=0,
+            relief=tk.FLAT,
+            padx=8,
+            pady=4,
+        )
+        self.start_button.pack(side=tk.LEFT)
+
+        self.stop_button = tk.Button(
+            controls,
+            text="■ Stop",
+            width=10,
+            command=self.stop_recording,
+            bg="#111827",
+            fg="#9CA3AF",
+            activebackground="#1F2937",
+            activeforeground="#F9FAFB",
+            bd=0,
+            relief=tk.FLAT,
+            padx=8,
+            pady=4,
+            state=tk.DISABLED,
+        )
+        self.stop_button.pack(side=tk.LEFT, padx=(8, 0))
+
+        open_btn = tk.Button(
+            controls,
+            text="Open log folder",
+            command=self.open_storage,
+            bg="#020617",
+            fg="#E5E7EB",
+            activebackground="#020617",
+            activeforeground="#FFFFFF",
+            bd=1,
+            relief=tk.FLAT,
+            padx=8,
+            pady=4,
+        )
+        open_btn.pack(side=tk.LEFT, padx=(16, 0))
+
+        # Hint text
+        notice = (
+            "This window only records events while it is focused.\n"
+            "Click inside, press “Start”, then type / click / scroll to see events."
+        )
+        hint = tk.Label(
+            root_frame,
+            text=notice,
+            justify=tk.LEFT,
+            fg="#6B7280",
+            bg="#05060a",
+            font=("TkDefaultFont", 9),
+        )
+        hint.pack(anchor=tk.W, pady=(4, 10))
+
+        # Log area
+        log_frame = tk.Frame(root_frame, bg="#05060a")
+        log_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.log = scrolledtext.ScrolledText(
+            log_frame,
+            wrap=tk.WORD,
+            height=20,
+            bg="#020617",
+            fg="#E5E7EB",
+            insertbackground="#F9FAFB",
+            relief=tk.FLAT,
+            borderwidth=0,
+        )
+        self.log.pack(fill=tk.BOTH, expand=True)
         self.log.configure(state=tk.DISABLED)
 
-        footer = tk.Frame(self)
-        footer.pack(fill=tk.X, padx=10, pady=(0, 10))
-        tk.Button(footer, text="Clear", width=10, command=self.clear_view).pack(side=tk.LEFT)
-        tk.Button(footer, text="Save snapshot", width=12, command=self.save_snapshot).pack(side=tk.LEFT, padx=(6, 0))
+        # Footer / stats
+        footer = tk.Frame(root_frame, bg="#05060a")
+        footer.pack(fill=tk.X, pady=(10, 0))
+
+        clear_btn = tk.Button(
+            footer,
+            text="Clear view",
+            width=10,
+            command=self.clear_view,
+            bg="#020617",
+            fg="#E5E7EB",
+            activebackground="#111827",
+            activeforeground="#FFFFFF",
+            bd=0,
+            relief=tk.FLAT,
+            padx=8,
+            pady=4,
+        )
+        clear_btn.pack(side=tk.LEFT)
+
+        snapshot_btn = tk.Button(
+            footer,
+            text="Save snapshot",
+            width=14,
+            command=self.save_snapshot,
+            bg="#020617",
+            fg="#E5E7EB",
+            activebackground="#111827",
+            activeforeground="#FFFFFF",
+            bd=0,
+            relief=tk.FLAT,
+            padx=8,
+            pady=4,
+        )
+        snapshot_btn.pack(side=tk.LEFT, padx=(8, 0))
+
         self.stats_var = tk.StringVar(value=self._stats_text())
-        tk.Label(footer, textvariable=self.stats_var, anchor=tk.E).pack(side=tk.RIGHT, fill=tk.X, expand=True)
+        stats_label = tk.Label(
+            footer,
+            textvariable=self.stats_var,
+            anchor=tk.E,
+            fg="#9CA3AF",
+            bg="#05060a",
+            font=("TkDefaultFont", 9),
+        )
+        stats_label.pack(side=tk.RIGHT, fill=tk.X, expand=True)
 
     def _bind_events(self) -> None:
         self.bind("<KeyPress>", self._on_keypress)
@@ -117,7 +258,9 @@ class InAppInputLogger(tk.Tk):
         self._start_time = datetime.now()
         self._stats = SessionStats()
         self._session_path = session_filename()
-        self.status_var.set(f"Status: Recording (saving to {self._session_path.as_posix()})")
+        self.status_var.set("Recording · events in this window only")
+        self.start_button.configure(state=tk.DISABLED, bg="#064E3B", fg="#6EE7B7")
+        self.stop_button.configure(state=tk.NORMAL, bg="#F97316", fg="#020617")
         self._append(f"[{now_stamp()}] Recording started")
         self._update_stats()
 
@@ -128,7 +271,9 @@ class InAppInputLogger(tk.Tk):
         self._recording = False
         end_time = datetime.now()
         start_time = self._start_time
-        self.status_var.set("Status: Idle (not recording)")
+        self.status_var.set("Idle · not recording")
+        self.start_button.configure(state=tk.NORMAL, bg="#10B981", fg="#020617")
+        self.stop_button.configure(state=tk.DISABLED, bg="#111827", fg="#9CA3AF")
         self._append(f"[{now_stamp()}] Recording stopped")
 
         if self._session_path and start_time:

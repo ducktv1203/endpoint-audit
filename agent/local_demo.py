@@ -14,12 +14,17 @@ from .process_watch import snapshot_processes, diff_processes
 
 def default_output_dir() -> Path:
     home = Path.home()
-    # Prefer Documents, fall back to Desktop, then home
+    # Prefer Documents, fall back to Desktop, then home,
+    # and always use a subfolder so logs stay contained.
+    base = None
     for name in ("Documents", "Desktop"):
-        p = home / name
-        if p.exists():
-            return p
-    return home
+        candidate = home / name
+        if candidate.exists():
+            base = candidate
+            break
+    if base is None:
+        base = home
+    return base / "endpoint-audit-demo"
 
 
 def parse_args() -> argparse.Namespace:
