@@ -5,6 +5,7 @@ agent/__init__.py
 agent/config.py
 agent/events.py
 agent/integrity.py
+agent/local_demo.py
 agent/process_watch.py
 agent/run.py
 agent/shipper.py

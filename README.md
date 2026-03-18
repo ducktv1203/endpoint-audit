@@ -45,6 +45,21 @@ Confirm data arrived on server:
 - `server_storage/<AUDIT_HOST_ID>/events.jsonl`
 - `server_storage/<AUDIT_HOST_ID>/latest.txt`
 
+## Local-only demo (no server required)
+
+This mode prints audit events in real time and writes a `.jsonl` file locally (default: your **Documents** folder).
+
+```bash
+python -m pip install -e ".[agent]"
+python -m agent.local_demo
+```
+
+Choose an output folder:
+
+```bash
+python -m agent.local_demo --out-dir "%USERPROFILE%\\Desktop" --host-id my-laptop
+```
+
 ## Windows headless run
 
 See `docs/windows-run-headless.md`.
@@ -52,6 +67,10 @@ See `docs/windows-run-headless.md`.
 ## One-command install (Windows)
 
 See `docs/one-command-install.md`.
+
+## Local demo doc
+
+See `docs/local-demo.md`.
 
 ## Configuration
 
