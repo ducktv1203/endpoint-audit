@@ -53,6 +53,10 @@ python -m agent.run
 
 See `docs/windows-run-headless.md`.
 
+## One-command install (Windows)
+
+See `docs/one-command-install.md`.
+
 ## Safety / Ethics
 
 This repo is intentionally scoped to **authorized endpoint auditing and in-app demos**.
